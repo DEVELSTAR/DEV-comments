@@ -1,7 +1,16 @@
-<% unless !comment.persisted? %>
+<% unless comment.parent_id || !comment.persisted? %>
   <div class="card">
     <div class="card-body">
       <%= comment.body %>
-    </div>
+      <%= link_to 'reply', new_post_comment_path(@post, parent_id: comment.id), remote: true, class: 'd-block' %>
+      </div>
   </div>
+
+  <% if comment.replies.any? %>
+    <% comment.replies.each do |reply| %> 
+    <div id="reply-form-<%= comment.id %>">
+      <%= render partial: 'comments/reply', locals: { reply: reply } %>
+    </div>
+    <% end %>
+  <% end %>
 <% end %>
